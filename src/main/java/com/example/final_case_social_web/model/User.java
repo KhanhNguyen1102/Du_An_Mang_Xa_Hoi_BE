@@ -1,5 +1,6 @@
 package com.example.final_case_social_web.model;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -20,11 +21,15 @@ public class User implements Serializable {
     private String username;
 
     @Column(nullable = false)
+    @Range(min=6,max=32)
     private String password;
 
     @Column(nullable = false)
+    @Range(min=6,max=32)
     private String confirmPassword;
+
     private boolean enabled = true;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -36,21 +41,28 @@ public class User implements Serializable {
     @Email
     private String email;
 
+    private String phone;
+
+    private String favorite;
+
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth;
 
     private String avatar;
 
+    private String cover;
+
     private String address;
-    @NotNull
-    private int status;
-//    (1 là đang hoạt động,2 là block)
+
+//    @NotNull
+//    private int status;
+////    (1 là đang hoạt động,2 là block)
 
     public User() {
     }
 
-    public User(Long id, String username, String password, String confirmPassword, boolean enabled, Set<Role> roles, String fullName, String email, LocalDate dateOfBirth, String avatar, String address, int status) {
+    public User(Long id, String username, String password, String confirmPassword, boolean enabled, Set<Role> roles, String fullName, String email, LocalDate dateOfBirth, String avatar, String address) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -62,10 +74,9 @@ public class User implements Serializable {
         this.dateOfBirth = dateOfBirth;
         this.avatar = avatar;
         this.address = address;
-        this.status = status;
     }
 
-    public User(String username, String password, String confirmPassword, boolean enabled, Set<Role> roles, String fullName, String email, LocalDate dateOfBirth, String avatar, String address, int status) {
+    public User(String username, String password, String confirmPassword, boolean enabled, Set<Role> roles, String fullName, String email, LocalDate dateOfBirth, String avatar, String address) {
         this.username = username;
         this.password = password;
         this.confirmPassword = confirmPassword;
@@ -76,7 +87,23 @@ public class User implements Serializable {
         this.dateOfBirth = dateOfBirth;
         this.avatar = avatar;
         this.address = address;
-        this.status = status;
+    }
+
+    public User(Long id, String username, String password, String confirmPassword, boolean enabled, Set<Role> roles, String fullName, String email, String phone, String favorite, LocalDate dateOfBirth, String avatar, String cover, String address) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+        this.enabled = enabled;
+        this.roles = roles;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.favorite = favorite;
+        this.dateOfBirth = dateOfBirth;
+        this.avatar = avatar;
+        this.cover = cover;
+        this.address = address;
     }
 
     public Long getId() {
@@ -167,11 +194,27 @@ public class User implements Serializable {
         this.address = address;
     }
 
-    public int getStatus() {
-        return status;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(String favorite) {
+        this.favorite = favorite;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 }
