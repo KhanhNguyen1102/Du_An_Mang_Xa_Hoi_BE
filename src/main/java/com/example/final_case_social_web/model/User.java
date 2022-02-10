@@ -1,11 +1,10 @@
 package com.example.final_case_social_web.model;
 
-import org.hibernate.validator.constraints.Range;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
@@ -21,11 +20,11 @@ public class User implements Serializable {
     private String username;
 
     @Column(nullable = false)
-    @Range(min=6,max=32)
+//    @Length(min = 5, max = 10)
     private String password;
 
     @Column(nullable = false)
-    @Range(min=6,max=32)
+//    @Length(min = 5, max = 10)
     private String confirmPassword;
 
     private boolean enabled = true;
@@ -38,15 +37,17 @@ public class User implements Serializable {
 
     private String fullName;
 
-    @Email
+    @Column(unique = true, nullable = false)
+    @Email(message = "Sai định dạng email")
     private String email;
 
+    @Pattern(regexp = "^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$",message = "Không phải số điện thoại hợp lệ")
     private String phone;
 
     private String favorite;
 
-    @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Past(message = "Phải là ngày trong quá khứ")
     private LocalDate dateOfBirth;
 
     private String avatar;
