@@ -39,9 +39,9 @@ public class FriendRelationController {
     @GetMapping(value = "/notFriend/{idU}")
     public ResponseEntity<List<User>> getListNotFriend(@PathVariable Long idU) {
         List<User> users = new ArrayList<>();
-        Iterable<Long> idUserNotFriend = friendRelationService.findAllIdUserNotFriend(idU,idU);
-        for (Long id : idUserNotFriend) {
-            Optional<User> user = userService.findById(id);
+        Iterable<BigInteger> idUserNotFriend = friendRelationService.findAllIdUserNotFriend(idU,idU);
+        for (BigInteger id : idUserNotFriend) {
+            Optional<User> user = userService.findById(id.longValue());
             users.add(user.get());
         }
         if (users == null) {
