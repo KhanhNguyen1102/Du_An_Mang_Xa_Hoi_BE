@@ -8,7 +8,7 @@ public class FriendRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long user_id_send;
-    private Long user_id_receive;
+    private Long idUser;
+    private Long idFriend;
     private String status;
 }

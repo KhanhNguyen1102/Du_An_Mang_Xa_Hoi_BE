@@ -32,4 +32,9 @@ public class FriendRelationServiceImpl implements IFriendRelationService{
     public void remove(Long id) {
         friendRelationRepository.deleteById(id);
     }
+
+    @Override
+    public Iterable<Long> findAllIdUserNotFriend(Long id, Long id1) {
+       return friendRelationRepository.findIdUserNotFriend(id,id1);
+    }
 }

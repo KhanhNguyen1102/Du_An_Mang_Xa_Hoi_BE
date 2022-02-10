@@ -1,13 +1,18 @@
 package com.example.final_case_social_web.controller;
 
 import com.example.final_case_social_web.model.FriendRelation;
+import com.example.final_case_social_web.model.User;
 import com.example.final_case_social_web.service.friend_relation.FriendRelationServiceImpl;
 import com.example.final_case_social_web.service.friend_relation.IFriendRelationService;
+import com.example.final_case_social_web.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -18,6 +23,9 @@ public class FriendRelationController {
     @Autowired
     private IFriendRelationService friendRelationService;
 
+    @Autowired
+    private IUserService userService;
+
     @GetMapping("")
     public ResponseEntity<Iterable<FriendRelation>> listAllFriendRelation() {
         Iterable<FriendRelation> friendRelations = friendRelationService.findAll();
@@ -26,6 +34,20 @@ public class FriendRelationController {
         }
         return new ResponseEntity<>(friendRelations, HttpStatus.OK);
 
+    }
+
+    @GetMapping(value = "/notFriend/{idU}")
+    public ResponseEntity<List<User>> getListNotFriend(@PathVariable Long idU) {
+        List<User> users = new ArrayList<>();
+        Iterable<Long> idUserNotFriend = friendRelationService.findAllIdUserNotFriend(idU,idU);
+        for (Long id : idUserNotFriend) {
+            Optional<User> user = userService.findById(id);
+            users.add(user.get());
+        }
+        if (users == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
