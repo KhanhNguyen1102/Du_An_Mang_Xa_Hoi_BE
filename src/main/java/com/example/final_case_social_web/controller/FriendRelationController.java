@@ -59,10 +59,11 @@ public class FriendRelationController {
         return new ResponseEntity<>(friendRelation.get(), HttpStatus.OK);
     }
 
-    @PostMapping("")
-    public ResponseEntity<Void> createFriendRelation(@RequestBody FriendRelation friendRelation) {
+    @GetMapping("/addFriend/{idUser}/{idFriend}")
+    public ResponseEntity<FriendRelation> addFriend(@PathVariable("idUser") Long idUser, @PathVariable("idFriend") Long idFriend) {
+        FriendRelation friendRelation = new FriendRelation(idUser, idFriend, "1");
         friendRelationService.save(friendRelation);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(friendRelation, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}")
