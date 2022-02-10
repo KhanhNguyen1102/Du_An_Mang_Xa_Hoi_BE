@@ -45,7 +45,6 @@ public class User implements Serializable {
 
     private String favorite;
 
-    @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth;
 
