@@ -38,4 +38,10 @@ public class FriendRelationServiceImpl implements IFriendRelationService{
     public Iterable<BigInteger> findAllIdUserNotFriend(Long id, Long id1) {
        return friendRelationRepository.findIdUserNotFriend(id,id1);
     }
+
+//    Phương thức tìm kiếm User gửi Request kết bạn đến mình
+    @Override
+    public Iterable<BigInteger> findUserByIdFriend(Long id) {
+        return friendRelationRepository.findUserByIdFriend(id);
+    }
 }

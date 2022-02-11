@@ -8,4 +8,5 @@ import java.math.BigInteger;
 
 public interface IFriendRelationService extends IGeneralService<FriendRelation> {
     Iterable<BigInteger> findAllIdUserNotFriend(Long id, Long id1);
+    Iterable<BigInteger> findUserByIdFriend(Long id);
 }
