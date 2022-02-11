@@ -46,10 +46,10 @@ public class PostController {
             Optional<Post> postOptional = postService.findById(id);
             return new ResponseEntity<>(postOptional.get(), HttpStatus.OK);
         }
-        @GetMapping("/search/{key}")
-        public ResponseEntity<Iterable<Post>> findByStatusContaining(String key){
-            Iterable<Post> postIterable=   postService.findByStatusContaining(key);
-            return  new ResponseEntity<>(postIterable,HttpStatus.OK);
-        }
+//        @GetMapping("/search/{key}")
+//        public ResponseEntity<Iterable<Post>> findByStatusContaining(String key){
+//            Iterable<Post> postIterable=  postService.findByStatusContaining(key);
+//            return  new ResponseEntity<>(postIterable,HttpStatus.OK);
+//        }
 
 }
