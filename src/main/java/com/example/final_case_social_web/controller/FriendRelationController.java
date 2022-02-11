@@ -39,7 +39,7 @@ public class FriendRelationController {
     @GetMapping(value = "/notFriend/{idU}")
     public ResponseEntity<List<User>> getListNotFriend(@PathVariable Long idU) {
         List<User> users = new ArrayList<>();
-        Iterable<BigInteger> idUserNotFriend = friendRelationService.findAllIdUserNotFriend(idU,idU);
+        Iterable<BigInteger> idUserNotFriend = friendRelationService.findAllIdUserNotFriend(idU, idU);
         for (BigInteger id : idUserNotFriend) {
             Optional<User> user = userService.findById(id.longValue());
             users.add(user.get());
@@ -64,6 +64,21 @@ public class FriendRelationController {
         FriendRelation friendRelation = new FriendRelation(idUser, idFriend, "1");
         friendRelationService.save(friendRelation);
         return new ResponseEntity<>(friendRelation, HttpStatus.OK);
+    }
+
+    //    Phương thức tìm kiếm User gửi Request kết bạn đến mình
+    @GetMapping("/friendRequest/{idFriend}")
+    public ResponseEntity<List<User>> findRequest(@PathVariable("idFriend") Long idFriend) {
+        List<User> users = new ArrayList<>();
+        Iterable<BigInteger> idUsers = friendRelationService.findUserByIdFriend(idFriend);
+        for (BigInteger id : idUsers) {
+            Optional<User> user = userService.findById(id.longValue());
+            users.add(user.get());
+        }
+        if (users == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}")
