@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/relationships")
+@RequestMapping("/api/friends")
 public class FriendRelationController {
 
     @Autowired
@@ -59,6 +59,7 @@ public class FriendRelationController {
         return new ResponseEntity<>(friendRelation.get(), HttpStatus.OK);
     }
 
+    //  API gửi lời mời kết bạn
     @GetMapping("/addFriend/{idUser}/{idFriend}")
     public ResponseEntity<FriendRelation> addFriend(@PathVariable("idUser") Long idUser, @PathVariable("idFriend") Long idFriend) {
         FriendRelation friendRelation = new FriendRelation(idUser, idFriend, "1");
@@ -66,7 +67,7 @@ public class FriendRelationController {
         return new ResponseEntity<>(friendRelation, HttpStatus.OK);
     }
 
-    //    Phương thức tìm kiếm User gửi Request kết bạn đến mình
+    // API tìm kiếm User gửi Request kết bạn đến mình
     @GetMapping("/friendRequest/{idFriend}")
     public ResponseEntity<List<User>> findRequest(@PathVariable("idFriend") Long idFriend) {
         List<User> users = new ArrayList<>();
@@ -79,6 +80,18 @@ public class FriendRelationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    // API đồng ý kết bạn
+    @GetMapping("/acceptance/{idU}/{idRequest}")
+    public ResponseEntity<Optional<FriendRelation>> acceptFriend(@PathVariable("idU") Long idUser, @PathVariable("idRequest") Long idRequest) {
+        Optional<FriendRelation> friendRelation = friendRelationService.findByIdUserAndIdFriend(idRequest, idUser);
+        if (friendRelation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        friendRelation.get().setStatus("2");
+        friendRelationService.save(friendRelation.get());
+        return new ResponseEntity<>(friendRelation, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}")

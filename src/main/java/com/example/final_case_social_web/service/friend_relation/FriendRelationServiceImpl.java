@@ -44,4 +44,9 @@ public class FriendRelationServiceImpl implements IFriendRelationService{
     public Iterable<BigInteger> findUserByIdFriend(Long id) {
         return friendRelationRepository.findUserByIdFriend(id);
     }
+
+    @Override
+    public Optional<FriendRelation> findByIdUserAndIdFriend(Long idUser, Long idFriend) {
+        return friendRelationRepository.findByIdUserAndIdFriend(idUser, idFriend);
+    }
 }
