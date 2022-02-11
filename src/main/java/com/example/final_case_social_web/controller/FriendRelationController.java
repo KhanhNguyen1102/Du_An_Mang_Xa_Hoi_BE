@@ -104,13 +104,14 @@ public class FriendRelationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<FriendRelation> deleteFriendRelation(@PathVariable("id") Long id) {
-        Optional<FriendRelation> friendRelation = friendRelationService.findById(id);
+    //    API hủy kết bạn, Hủy yêu cầu kết bạn
+    @DeleteMapping(value = "/{idUser}/{idFriend}")
+    public ResponseEntity<FriendRelation> deleteFriendRelation(@PathVariable("idUser") Long idUser, @PathVariable("idFriend") Long idFriend) {
+        Optional<FriendRelation> friendRelation = friendRelationService.findByIdUserAndIdFriend(idUser, idFriend);
         if (friendRelation == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        friendRelationService.remove(id);
+        friendRelationService.remove(friendRelation.get().getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
