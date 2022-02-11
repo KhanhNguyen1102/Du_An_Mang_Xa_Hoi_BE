@@ -6,6 +6,7 @@ import com.example.final_case_social_web.repository.FriendRelationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.Optional;
 
 @Service
@@ -31,5 +32,10 @@ public class FriendRelationServiceImpl implements IFriendRelationService{
     @Override
     public void remove(Long id) {
         friendRelationRepository.deleteById(id);
+    }
+
+    @Override
+    public Iterable<BigInteger> findAllIdUserNotFriend(Long id, Long id1) {
+       return friendRelationRepository.findIdUserNotFriend(id,id1);
     }
 }

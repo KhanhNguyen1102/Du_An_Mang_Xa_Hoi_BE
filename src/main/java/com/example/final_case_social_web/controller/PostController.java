@@ -48,7 +48,7 @@ public class PostController {
         }
 //        @GetMapping("/search/{key}")
 //        public ResponseEntity<Iterable<Post>> findByStatusContaining(String key){
-//            Iterable<Post> postIterable=  postService.findByStatusContaining(key);
+//            Iterable<Post> postIterable=   postService.findByStatusContaining(key);
 //            return  new ResponseEntity<>(postIterable,HttpStatus.OK);
 //        }
 
