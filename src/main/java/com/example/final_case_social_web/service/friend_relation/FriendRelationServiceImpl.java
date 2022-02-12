@@ -49,4 +49,10 @@ public class FriendRelationServiceImpl implements IFriendRelationService{
     public Optional<FriendRelation> findByIdUserAndIdFriend(Long idUser, Long idFriend) {
         return friendRelationRepository.findByIdUserAndIdFriend(idUser, idFriend);
     }
+
+    @Override
+    public Integer countListFriend(Long idUser) {
+        return friendRelationRepository.countListFriend(idUser);
+    }
+
 }

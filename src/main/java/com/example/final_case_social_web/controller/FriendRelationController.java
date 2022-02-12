@@ -114,4 +114,14 @@ public class FriendRelationController {
         friendRelationService.remove(friendRelation.get().getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    //    API đếm số lượng bạn bè
+    @GetMapping("/allFriends/{idU}")
+    public ResponseEntity<Integer> countListFriend(@PathVariable("idU") Long idUser) {
+        Integer numberOfFriends = friendRelationService.countListFriend(idUser);
+        if (numberOfFriends == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(numberOfFriends, HttpStatus.OK);
+    }
 }
