@@ -36,8 +36,8 @@ public class FriendRelationController {
 
     }
 
-    @GetMapping(value = "/notFriend/{idU}")
-    public ResponseEntity<List<User>> getListNotFriend(@PathVariable Long idU) {
+    @GetMapping(value = "/notFriend/{idUser}")
+    public ResponseEntity<List<User>> getListNotFriend(@PathVariable("idUser") Long idU) {
         List<User> users = new ArrayList<>();
         Iterable<BigInteger> idUserNotFriend = friendRelationService.findAllIdUserNotFriend(idU, idU);
         for (BigInteger id : idUserNotFriend) {
@@ -50,8 +50,8 @@ public class FriendRelationController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{idU}")
-    public ResponseEntity<Iterable<User>> getAllFriend(@PathVariable Long idU) {
+    @GetMapping(value = "/{idUser}")
+    public ResponseEntity<Iterable<User>> getAllFriend(@PathVariable("idUser") Long idU) {
         List<User> users = new ArrayList<>();
         Iterable<BigInteger> listIdFriend = friendRelationService.findIdFriend(idU);
         for (BigInteger id : listIdFriend) {
@@ -90,8 +90,8 @@ public class FriendRelationController {
     }
 
     // API đồng ý kết bạn
-    @GetMapping("/acceptance/{idU}/{idRequest}")
-    public ResponseEntity<Iterable<FriendRelation>> acceptFriend(@PathVariable("idU") Long idUser, @PathVariable("idRequest") Long idRequest) {
+    @GetMapping("/acceptance/{idUser}/{idRequest}")
+    public ResponseEntity<Iterable<FriendRelation>> acceptFriend(@PathVariable("idUser") Long idUser, @PathVariable("idRequest") Long idRequest) {
         Optional<FriendRelation> friendRelationSend = friendRelationService.findByIdUserAndIdFriend(idRequest, idUser);
         Optional<FriendRelation> friendRelationReceive = friendRelationService.findByIdUserAndIdFriend(idUser, idRequest);
         if (friendRelationSend == null || friendRelationReceive == null) {
@@ -130,6 +130,34 @@ public class FriendRelationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // Tìm danh sách bạn chung
+    @GetMapping("/listMutualFriend/{idUser}/{idFriend}")
+    public ResponseEntity<List<User>> listMutualFriend(@PathVariable("idUser") Long idUser, @PathVariable("idFriend") Long idFriend) {
+        List<User> listFriendOfUser = new ArrayList<>();
+        List<User> listFriendOfFriend = new ArrayList<>();
+        List<User> listMutualFriend = new ArrayList<>();
+        Iterable<BigInteger> idFriendOfIdUser = friendRelationService.findIdFriend(idUser);
+        Iterable<BigInteger> idFriendOfIdFriend = friendRelationService.findIdFriend(idFriend);
+        for (BigInteger id : idFriendOfIdUser) {
+            Optional<User> user = userService.findById(id.longValue());
+            listFriendOfUser.add(user.get());
+        }
+        for (BigInteger id : idFriendOfIdFriend) {
+            Optional<User> user = userService.findById(id.longValue());
+            listFriendOfFriend.add(user.get());
+        }
+        for (int i = 0; i < listFriendOfUser.size(); i++)
+            for (int j = 0; j < listFriendOfFriend.size(); j++)
+        {
+            if (listFriendOfUser.get(i).getId() == listFriendOfFriend.get(j).getId()) {
+                listMutualFriend.add(listFriendOfUser.get(i));
+            }
+        }
+        if (listMutualFriend == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(listMutualFriend, HttpStatus.OK);
+    }
 //    Chức năng đang lỗi
 //    API đếm số lượng bạn bè
 //    @GetMapping("/allFriends/{idU}")
