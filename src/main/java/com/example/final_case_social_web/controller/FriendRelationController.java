@@ -86,14 +86,20 @@ public class FriendRelationController {
 
     // API đồng ý kết bạn
     @GetMapping("/acceptance/{idU}/{idRequest}")
-    public ResponseEntity<Optional<FriendRelation>> acceptFriend(@PathVariable("idU") Long idUser, @PathVariable("idRequest") Long idRequest) {
-        Optional<FriendRelation> friendRelation = friendRelationService.findByIdUserAndIdFriend(idRequest, idUser);
-        if (friendRelation == null) {
+    public ResponseEntity<Iterable<FriendRelation>> acceptFriend(@PathVariable("idU") Long idUser, @PathVariable("idRequest") Long idRequest) {
+        Optional<FriendRelation> friendRelationSend = friendRelationService.findByIdUserAndIdFriend(idRequest, idUser);
+        Optional<FriendRelation> friendRelationReceive = friendRelationService.findByIdUserAndIdFriend(idUser, idRequest);
+        if (friendRelationSend == null || friendRelationReceive == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        friendRelation.get().setStatus("2");
-        friendRelationService.save(friendRelation.get());
-        return new ResponseEntity<>(friendRelation, HttpStatus.OK);
+        friendRelationSend.get().setStatus("2");
+        friendRelationService.save(friendRelationSend.get());
+        friendRelationReceive.get().setStatus("2");
+        friendRelationService.save(friendRelationReceive.get());
+        List<FriendRelation> result = new ArrayList<>();
+        result.add(friendRelationSend.get());
+        result.add(friendRelationReceive.get());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}")
