@@ -60,11 +60,13 @@ public class FriendRelationController {
     }
 
     //  API gửi lời mời kết bạn
-    @GetMapping("/addFriend/{idUser}/{idFriend}")
+    @PostMapping("/{idUser}/{idFriend}")
     public ResponseEntity<FriendRelation> addFriend(@PathVariable("idUser") Long idUser, @PathVariable("idFriend") Long idFriend) {
-        FriendRelation friendRelation = new FriendRelation(idUser, idFriend, "1");
-        friendRelationService.save(friendRelation);
-        return new ResponseEntity<>(friendRelation, HttpStatus.OK);
+        FriendRelation friendRequestSend = new FriendRelation(idUser, idFriend, "1");
+        FriendRelation friendRequestReceive = new FriendRelation(idFriend, idUser, "3");
+        friendRelationService.save(friendRequestSend);
+        friendRelationService.save(friendRequestReceive);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // API tìm kiếm User gửi Request kết bạn đến mình
