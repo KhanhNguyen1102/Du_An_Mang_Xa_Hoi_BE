@@ -70,11 +70,11 @@ public class FriendRelationController {
     }
 
     // API tìm kiếm User gửi Request kết bạn đến mình
-    @GetMapping("/friendRequest/{idFriend}")
-    public ResponseEntity<List<User>> findRequest(@PathVariable("idFriend") Long idFriend) {
+    @GetMapping("/friendRequest/{idUser}")
+    public ResponseEntity<List<User>> findRequest(@PathVariable("idUser") Long idUser) {
         List<User> users = new ArrayList<>();
-        Iterable<BigInteger> idUsers = friendRelationService.findUserByIdFriend(idFriend);
-        for (BigInteger id : idUsers) {
+        Iterable<BigInteger> idFriend = friendRelationService.findRequest(idUser);
+        for (BigInteger id : idFriend) {
             Optional<User> user = userService.findById(id.longValue());
             users.add(user.get());
         }
@@ -117,13 +117,14 @@ public class FriendRelationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //    API đếm số lượng bạn bè
-    @GetMapping("/allFriends/{idU}")
-    public ResponseEntity<Integer> countListFriend(@PathVariable("idU") Long idUser) {
-        Integer numberOfFriends = friendRelationService.countListFriend(idUser);
-        if (numberOfFriends == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(numberOfFriends, HttpStatus.OK);
-    }
+//    Chức năng đang lỗi
+//    API đếm số lượng bạn bè
+//    @GetMapping("/allFriends/{idU}")
+//    public ResponseEntity<Integer> countListFriend(@PathVariable("idU") Long idUser) {
+//        Integer numberOfFriends = friendRelationService.countListFriend(idUser);
+//        if (numberOfFriends == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<>(numberOfFriends, HttpStatus.OK);
+//    }
 }

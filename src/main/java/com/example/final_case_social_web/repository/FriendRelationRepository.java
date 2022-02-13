@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public interface FriendRelationRepository extends JpaRepository<FriendRelation, Long> {
     @Modifying
-    @Query(value = "select id_user from friend_relation where id_friend = :id1 and status = '1'", nativeQuery = true)
-    Iterable<BigInteger> findUserByIdFriend(@Param("id1") Long id2);
+    @Query(value = "select id_friend from friend_relation where id_user = :id1 and status = '3'", nativeQuery = true)
+    Iterable<BigInteger> findRequest(@Param("id1") Long id2);
 
     @Modifying
     @Query(value = "select id from user_table where id not in (select id_friend from friend_relation where id_user = :id1) and id != :id2 ", nativeQuery = true)
@@ -21,8 +21,10 @@ public interface FriendRelationRepository extends JpaRepository<FriendRelation, 
 
     Optional<FriendRelation> findByIdUserAndIdFriend(Long idUser, Long idFriend);
 
-    @Modifying
-    @Query(value = "select COUNT(DISTINCT id_friend) from friend_relation where id_user = :id1 and status = '2'", nativeQuery = true)
-    Integer countListFriend(@Param("id1") Long id2);
+    //    Chức năng đang bị lỗi
+//    @Modifying
+//    @Query(value = "select COUNT(DISTINCT id_friend) from friend_relation where id_user = :id1 and status = '2'", nativeQuery = true)
+//    Integer countListFriend(@Param("id1") Long id2);
 
+//    Iterable<FriendRelation> findAllByIdUserAndStatus(Long idUser, String status);
 }
