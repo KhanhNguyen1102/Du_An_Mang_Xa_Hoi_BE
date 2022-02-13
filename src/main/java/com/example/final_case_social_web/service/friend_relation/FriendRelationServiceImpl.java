@@ -50,6 +50,11 @@ public class FriendRelationServiceImpl implements IFriendRelationService {
         return friendRelationRepository.findByIdUserAndIdFriend(idUser, idFriend);
     }
 
+    @Override
+    public Iterable<BigInteger> findIdFriend(Long idUser) {
+        return friendRelationRepository.findIdFriend(idUser);
+    }
+
 // Chức năng đang lỗi
 //    @Override
 //    public Integer countListFriend(Long idUser) {

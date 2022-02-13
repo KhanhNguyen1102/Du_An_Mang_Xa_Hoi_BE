@@ -11,9 +11,11 @@ import java.util.Optional;
 public interface IFriendRelationService extends IGeneralService<FriendRelation> {
     Iterable<BigInteger> findAllIdUserNotFriend(Long id, Long id1);
 
-    Iterable<BigInteger> findRequest(Long id);
+    Iterable<BigInteger> findRequest(Long idUser);
 
     Optional<FriendRelation> findByIdUserAndIdFriend(Long idUser, Long idFriend);
+
+    Iterable<BigInteger> findIdFriend(Long idUser);
 
 //    Chức năng đang lỗi
     //    Integer countListFriend(Long idUser);

@@ -21,6 +21,9 @@ public interface FriendRelationRepository extends JpaRepository<FriendRelation, 
 
     Optional<FriendRelation> findByIdUserAndIdFriend(Long idUser, Long idFriend);
 
+    @Modifying
+    @Query(value = "select id_friend from friend_relation where id_user = :id1 and status = '2'", nativeQuery = true)
+    Iterable<BigInteger> findIdFriend(@Param("id1") Long id2);
     //    Chức năng đang bị lỗi
 //    @Modifying
 //    @Query(value = "select COUNT(DISTINCT id_friend) from friend_relation where id_user = :id1 and status = '2'", nativeQuery = true)
