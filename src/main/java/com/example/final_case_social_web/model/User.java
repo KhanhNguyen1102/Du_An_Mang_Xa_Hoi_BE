@@ -50,9 +50,9 @@ public class User implements Serializable {
     @Past(message = "Phải là ngày trong quá khứ")
     private LocalDate dateOfBirth;
 
-    private String avatar;
+    private String avatar = "assets/images/defaultAva.png";
 
-    private String cover;
+    private String cover ="assets/images/face-map_ccexpress.png";
 
     private String address;
 
