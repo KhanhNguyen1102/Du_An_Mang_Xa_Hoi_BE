@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/relationships")
+@RequestMapping("/api/friends")
 public class FriendRelationController {
 
     @Autowired
@@ -36,8 +36,8 @@ public class FriendRelationController {
 
     }
 
-    @GetMapping(value = "/notFriend/{idU}")
-    public ResponseEntity<List<User>> getListNotFriend(@PathVariable Long idU) {
+    @GetMapping(value = "/notFriend/{idUser}")
+    public ResponseEntity<List<User>> getListNotFriend(@PathVariable("idUser") Long idU) {
         List<User> users = new ArrayList<>();
         Iterable<BigInteger> idUserNotFriend = friendRelationService.findAllIdUserNotFriend(idU, idU);
         for (BigInteger id : idUserNotFriend) {
@@ -50,28 +50,11 @@ public class FriendRelationController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<FriendRelation> getFriendRelation(@PathVariable Long id) {
-        Optional<FriendRelation> friendRelation = friendRelationService.findById(id);
-        if (friendRelation == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(friendRelation.get(), HttpStatus.OK);
-    }
-
-    @GetMapping("/addFriend/{idUser}/{idFriend}")
-    public ResponseEntity<FriendRelation> addFriend(@PathVariable("idUser") Long idUser, @PathVariable("idFriend") Long idFriend) {
-        FriendRelation friendRelation = new FriendRelation(idUser, idFriend, "1");
-        friendRelationService.save(friendRelation);
-        return new ResponseEntity<>(friendRelation, HttpStatus.OK);
-    }
-
-    //    Phương thức tìm kiếm User gửi Request kết bạn đến mình
-    @GetMapping("/friendRequest/{idFriend}")
-    public ResponseEntity<List<User>> findRequest(@PathVariable("idFriend") Long idFriend) {
+    @GetMapping(value = "/{idUser}")
+    public ResponseEntity<Iterable<User>> getAllFriend(@PathVariable("idUser") Long idU) {
         List<User> users = new ArrayList<>();
-        Iterable<BigInteger> idUsers = friendRelationService.findUserByIdFriend(idFriend);
-        for (BigInteger id : idUsers) {
+        Iterable<BigInteger> listIdFriend = friendRelationService.findIdFriend(idU);
+        for (BigInteger id : listIdFriend) {
             Optional<User> user = userService.findById(id.longValue());
             users.add(user.get());
         }
@@ -79,6 +62,49 @@ public class FriendRelationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    //  API gửi lời mời kết bạn
+    @PostMapping("/{idUser}/{idFriend}")
+    public ResponseEntity<FriendRelation> addFriend(@PathVariable("idUser") Long idUser, @PathVariable("idFriend") Long idFriend) {
+        FriendRelation friendRequestSend = new FriendRelation(idUser, idFriend, "1");
+        FriendRelation friendRequestReceive = new FriendRelation(idFriend, idUser, "3");
+        friendRelationService.save(friendRequestSend);
+        friendRelationService.save(friendRequestReceive);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // API tìm kiếm User gửi Request kết bạn đến mình
+    @GetMapping("/friendRequest/{idUser}")
+    public ResponseEntity<List<User>> findRequest(@PathVariable("idUser") Long idUser) {
+        List<User> users = new ArrayList<>();
+        Iterable<BigInteger> idFriend = friendRelationService.findRequest(idUser);
+        for (BigInteger id : idFriend) {
+            Optional<User> user = userService.findById(id.longValue());
+            users.add(user.get());
+        }
+        if (users == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    // API đồng ý kết bạn
+    @GetMapping("/acceptance/{idUser}/{idRequest}")
+    public ResponseEntity<Iterable<FriendRelation>> acceptFriend(@PathVariable("idUser") Long idUser, @PathVariable("idRequest") Long idRequest) {
+        Optional<FriendRelation> friendRelationSend = friendRelationService.findByIdUserAndIdFriend(idRequest, idUser);
+        Optional<FriendRelation> friendRelationReceive = friendRelationService.findByIdUserAndIdFriend(idUser, idRequest);
+        if (friendRelationSend == null || friendRelationReceive == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        friendRelationSend.get().setStatus("2");
+        friendRelationService.save(friendRelationSend.get());
+        friendRelationReceive.get().setStatus("2");
+        friendRelationService.save(friendRelationReceive.get());
+        List<FriendRelation> result = new ArrayList<>();
+        result.add(friendRelationSend.get());
+        result.add(friendRelationReceive.get());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}")
@@ -91,13 +117,55 @@ public class FriendRelationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<FriendRelation> deleteFriendRelation(@PathVariable("id") Long id) {
-        Optional<FriendRelation> friendRelation = friendRelationService.findById(id);
-        if (friendRelation == null) {
+    //    API hủy kết bạn, Hủy yêu cầu kết bạn
+    @DeleteMapping(value = "/{idUser}/{idFriend}")
+    public ResponseEntity<FriendRelation> deleteFriendRelation(@PathVariable("idUser") Long idUser, @PathVariable("idFriend") Long idFriend) {
+        Optional<FriendRelation> friendRelationSend = friendRelationService.findByIdUserAndIdFriend(idUser, idFriend);
+        Optional<FriendRelation> friendRelationReceive = friendRelationService.findByIdUserAndIdFriend(idFriend, idUser);
+        if (friendRelationSend == null || friendRelationReceive == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        friendRelationService.remove(id);
+        friendRelationService.remove(friendRelationSend.get().getId());
+        friendRelationService.remove(friendRelationReceive.get().getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    // Tìm danh sách bạn chung
+    @GetMapping("/listMutualFriend/{idUser}/{idFriend}")
+    public ResponseEntity<List<User>> listMutualFriend(@PathVariable("idUser") Long idUser, @PathVariable("idFriend") Long idFriend) {
+        List<User> listFriendOfUser = new ArrayList<>();
+        List<User> listFriendOfFriend = new ArrayList<>();
+        List<User> listMutualFriend = new ArrayList<>();
+        Iterable<BigInteger> idFriendOfIdUser = friendRelationService.findIdFriend(idUser);
+        Iterable<BigInteger> idFriendOfIdFriend = friendRelationService.findIdFriend(idFriend);
+        for (BigInteger id : idFriendOfIdUser) {
+            Optional<User> user = userService.findById(id.longValue());
+            listFriendOfUser.add(user.get());
+        }
+        for (BigInteger id : idFriendOfIdFriend) {
+            Optional<User> user = userService.findById(id.longValue());
+            listFriendOfFriend.add(user.get());
+        }
+        for (int i = 0; i < listFriendOfUser.size(); i++)
+            for (int j = 0; j < listFriendOfFriend.size(); j++)
+        {
+            if (listFriendOfUser.get(i).getId() == listFriendOfFriend.get(j).getId()) {
+                listMutualFriend.add(listFriendOfUser.get(i));
+            }
+        }
+        if (listMutualFriend == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(listMutualFriend, HttpStatus.OK);
+    }
+//    Chức năng đang lỗi
+//    API đếm số lượng bạn bè
+//    @GetMapping("/allFriends/{idU}")
+//    public ResponseEntity<Integer> countListFriend(@PathVariable("idU") Long idUser) {
+//        Integer numberOfFriends = friendRelationService.countListFriend(idUser);
+//        if (numberOfFriends == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<>(numberOfFriends, HttpStatus.OK);
+//    }
 }

@@ -10,7 +10,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 @Service
-public class FriendRelationServiceImpl implements IFriendRelationService{
+public class FriendRelationServiceImpl implements IFriendRelationService {
     @Autowired
     private FriendRelationRepository friendRelationRepository;
 
@@ -34,14 +34,31 @@ public class FriendRelationServiceImpl implements IFriendRelationService{
         friendRelationRepository.deleteById(id);
     }
 
+
     @Override
     public Iterable<BigInteger> findAllIdUserNotFriend(Long id, Long id1) {
-       return friendRelationRepository.findIdUserNotFriend(id,id1);
+        return friendRelationRepository.findIdUserNotFriend(id, id1);
     }
 
-//    Phương thức tìm kiếm User gửi Request kết bạn đến mình
     @Override
-    public Iterable<BigInteger> findUserByIdFriend(Long id) {
-        return friendRelationRepository.findUserByIdFriend(id);
+    public Iterable<BigInteger> findRequest(Long idUser) {
+        return friendRelationRepository.findRequest(idUser);
     }
+
+    @Override
+    public Optional<FriendRelation> findByIdUserAndIdFriend(Long idUser, Long idFriend) {
+        return friendRelationRepository.findByIdUserAndIdFriend(idUser, idFriend);
+    }
+
+    @Override
+    public Iterable<BigInteger> findIdFriend(Long idUser) {
+        return friendRelationRepository.findIdFriend(idUser);
+    }
+
+// Chức năng đang lỗi
+//    @Override
+//    public Integer countListFriend(Long idUser) {
+//        return friendRelationRepository.countListFriend(idUser);
+//    }
+
 }
