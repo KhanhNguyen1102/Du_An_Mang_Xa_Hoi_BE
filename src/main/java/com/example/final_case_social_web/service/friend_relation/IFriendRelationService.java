@@ -16,7 +16,4 @@ public interface IFriendRelationService extends IGeneralService<FriendRelation> 
     Optional<FriendRelation> findByIdUserAndIdFriend(Long idUser, Long idFriend);
 
     Iterable<BigInteger> findIdFriend(Long idUser);
-
-//    Chức năng đang lỗi
-    //    Integer countListFriend(Long idUser);
 }

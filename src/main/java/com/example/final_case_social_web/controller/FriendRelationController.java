@@ -147,25 +147,14 @@ public class FriendRelationController {
             listFriendOfFriend.add(user.get());
         }
         for (int i = 0; i < listFriendOfUser.size(); i++)
-            for (int j = 0; j < listFriendOfFriend.size(); j++)
-        {
-            if (listFriendOfUser.get(i).getId() == listFriendOfFriend.get(j).getId()) {
-                listMutualFriend.add(listFriendOfUser.get(i));
+            for (int j = 0; j < listFriendOfFriend.size(); j++) {
+                if (listFriendOfUser.get(i).getId() == listFriendOfFriend.get(j).getId()) {
+                    listMutualFriend.add(listFriendOfUser.get(i));
+                }
             }
-        }
         if (listMutualFriend == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(listMutualFriend, HttpStatus.OK);
     }
-//    Chức năng đang lỗi
-//    API đếm số lượng bạn bè
-//    @GetMapping("/allFriends/{idU}")
-//    public ResponseEntity<Integer> countListFriend(@PathVariable("idU") Long idUser) {
-//        Integer numberOfFriends = friendRelationService.countListFriend(idUser);
-//        if (numberOfFriends == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<>(numberOfFriends, HttpStatus.OK);
-//    }
 }
