@@ -89,6 +89,15 @@ public class FriendRelationController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @GetMapping("/{idUser}/{idFriend}")
+    public ResponseEntity<Optional<FriendRelation>> findByIdUserAndIdFriend(@PathVariable("idUser") Long idUser, @PathVariable("idFriend") Long idFriend) {
+        Optional<FriendRelation> friendRelation = friendRelationService.findByIdUserAndIdFriend(idUser, idFriend);
+        if (friendRelation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(friendRelation,HttpStatus.OK);
+    }
+
     // API đồng ý kết bạn
     @GetMapping("/acceptance/{idUser}/{idRequest}")
     public ResponseEntity<Iterable<FriendRelation>> acceptFriend(@PathVariable("idUser") Long idUser, @PathVariable("idRequest") Long idRequest) {
