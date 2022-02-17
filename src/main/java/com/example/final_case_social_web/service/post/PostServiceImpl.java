@@ -32,4 +32,19 @@ public class PostServiceImpl implements IPostService {
     public void remove(Long id) {
         postRepository.deleteById(id);
     }
+
+    @Override
+    public Iterable<Post> findByStatusContaining(String status) {
+        return postRepository.findByStatusContaining(status);
+    }
+
+    @Override
+    public Iterable<Post> findAllByStatusFriend() {
+        return postRepository.findAllByStatusFriend();
+    }
+
+    @Override
+    public Iterable<Post> findAllByStatusNotFriend() {
+        return postRepository.findAllByStatusNotFriend();
+    }
 }

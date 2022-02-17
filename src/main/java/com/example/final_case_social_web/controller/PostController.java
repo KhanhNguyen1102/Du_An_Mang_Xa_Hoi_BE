@@ -46,6 +46,18 @@ public class PostController {
             Optional<Post> postOptional = postService.findById(id);
             return new ResponseEntity<>(postOptional.get(), HttpStatus.OK);
         }
+    @GetMapping("friends")
+    public ResponseEntity<Iterable<Post>> findAllFriend() {
+
+        Iterable<Post> postIterable = postService.findAllByStatusFriend();
+        return new ResponseEntity<>(postIterable, HttpStatus.OK);
+    }
+    @GetMapping("notFriends")
+    public ResponseEntity<Iterable<Post>> findAllNotFriend() {
+
+        Iterable<Post> postIterable = postService.findAllByStatusNotFriend();
+        return new ResponseEntity<>(postIterable, HttpStatus.OK);
+    }
 //        @GetMapping("/search/{key}")
 //        public ResponseEntity<Iterable<Post>> findByStatusContaining(String key){
 //            Iterable<Post> postIterable=   postService.findByStatusContaining(key);
