@@ -1,6 +1,7 @@
 package com.example.final_case_social_web.service.post;
 
 import com.example.final_case_social_web.model.Post;
+import com.example.final_case_social_web.model.User;
 import com.example.final_case_social_web.repository.PostRepository;
 import com.example.final_case_social_web.service.IGeneralService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,4 +48,10 @@ public class PostServiceImpl implements IPostService {
     public Iterable<Post> findAllByStatusNotFriend() {
         return postRepository.findAllByStatusNotFriend();
     }
+
+    @Override
+    public Iterable<Post> findAllByUserId(Long id) {
+        return postRepository.findAllByUserId(id);
+    }
+
 }

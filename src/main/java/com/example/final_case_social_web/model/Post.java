@@ -1,6 +1,9 @@
 package com.example.final_case_social_web.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -14,8 +17,9 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private Date createAt;
-    String content;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate createAt;
+    private String content;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "post_image",
             joinColumns = {@JoinColumn(name = "post_id")},
@@ -26,7 +30,7 @@ public class Post {
     public Post() {
     }
 
-    public Post(Long id, User user, Date createAt, String content, List<Image> imageList, String status) {
+    public Post(Long id, User user, LocalDate createAt, String content, List<Image> imageList, String status) {
         this.id = id;
         this.user = user;
         this.createAt = createAt;
@@ -51,11 +55,11 @@ public class Post {
         this.user = user;
     }
 
-    public Date getCreateAt() {
+    public LocalDate getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(Date createAt) {
+    public void setCreateAt(LocalDate createAt) {
         this.createAt = createAt;
     }
 

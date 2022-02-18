@@ -1,12 +1,15 @@
 package com.example.final_case_social_web.controller;
 
 import com.example.final_case_social_web.model.Post;
+import com.example.final_case_social_web.model.User;
 import com.example.final_case_social_web.service.post.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 @RestController
 @CrossOrigin("*")
@@ -24,12 +27,14 @@ public class PostController {
 
         @PostMapping("")
         public ResponseEntity<Post> create(@RequestBody Post post) {
+            post.setCreateAt(LocalDate.now());
             postService.save(post);
             return new ResponseEntity<>(post, HttpStatus.CREATED);
         }
 
         @PutMapping("/{id}")
         public ResponseEntity<Post> update(@PathVariable Long id, @RequestBody Post post) {
+            post.setCreateAt(LocalDate.now());
             post.setId(id);
             postService.save(post);
             return new ResponseEntity<>(post, HttpStatus.OK);
@@ -58,10 +63,10 @@ public class PostController {
         Iterable<Post> postIterable = postService.findAllByStatusNotFriend();
         return new ResponseEntity<>(postIterable, HttpStatus.OK);
     }
-//        @GetMapping("/search/{key}")
-//        public ResponseEntity<Iterable<Post>> findByStatusContaining(String key){
-//            Iterable<Post> postIterable=   postService.findByStatusContaining(key);
-//            return  new ResponseEntity<>(postIterable,HttpStatus.OK);
-//        }
+    @GetMapping("/search")
+    public ResponseEntity<Iterable<Post>> findAllByUserId(@RequestParam Long q){
+        Iterable<Post> postIterable=   postService.findAllByUserId(q);
+        return  new ResponseEntity<>(postIterable,HttpStatus.OK);
+    }
 
 }
