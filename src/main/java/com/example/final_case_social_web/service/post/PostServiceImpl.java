@@ -54,4 +54,9 @@ public class PostServiceImpl implements IPostService {
         return postRepository.findAllByUserId(id);
     }
 
+    @Override
+    public Optional<Post> findTop1NewByUserId(Long id) {
+        return postRepository.findTop1NewByUserId(id);
+    }
+
 }

@@ -13,6 +13,8 @@ public interface IFriendRelationService extends IGeneralService<FriendRelation> 
 
     Iterable<BigInteger> findRequest(Long idUser);
 
+    Iterable<BigInteger> findTop5Request(Long idUser);
+
     Optional<FriendRelation> findByIdUserAndIdFriend(Long idUser, Long idFriend);
 
     Iterable<BigInteger> findIdFriend(Long idUser);

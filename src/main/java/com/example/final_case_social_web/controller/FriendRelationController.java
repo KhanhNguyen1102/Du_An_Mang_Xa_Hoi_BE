@@ -89,6 +89,20 @@ public class FriendRelationController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @GetMapping("/top5Request/{idUser}")
+    public ResponseEntity<List<User>> findTop5Request(@PathVariable("idUser") Long idUser) {
+        List<User> users = new ArrayList<>();
+        Iterable<BigInteger> idFriend = friendRelationService.findTop5Request(idUser);
+        for (BigInteger id : idFriend) {
+            Optional<User> user = userService.findById(id.longValue());
+            users.add(user.get());
+        }
+        if (users == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
     @GetMapping("/{idUser}/{idFriend}")
     public ResponseEntity<Optional<FriendRelation>> findByIdUserAndIdFriend(@PathVariable("idUser") Long idUser, @PathVariable("idFriend") Long idFriend) {
         Optional<FriendRelation> friendRelation = friendRelationService.findByIdUserAndIdFriend(idUser, idFriend);

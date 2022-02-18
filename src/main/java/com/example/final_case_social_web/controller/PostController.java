@@ -69,4 +69,10 @@ public class PostController {
         return  new ResponseEntity<>(postIterable,HttpStatus.OK);
     }
 
+    @GetMapping("/postOfFriends/{id}")
+    public ResponseEntity<Optional<Post>> findPostByIdFriend(@PathVariable Long id) {
+        Optional<Post> post = postService.findTop1NewByUserId(id);
+        return new ResponseEntity<>(post,HttpStatus.OK);
+    }
+
 }

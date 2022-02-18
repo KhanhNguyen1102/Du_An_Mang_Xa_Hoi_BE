@@ -46,6 +46,11 @@ public class FriendRelationServiceImpl implements IFriendRelationService {
     }
 
     @Override
+    public Iterable<BigInteger> findTop5Request(Long idUser) {
+        return friendRelationRepository.findTop5Request(idUser);
+    }
+
+    @Override
     public Optional<FriendRelation> findByIdUserAndIdFriend(Long idUser, Long idFriend) {
         return friendRelationRepository.findByIdUserAndIdFriend(idUser, idFriend);
     }
