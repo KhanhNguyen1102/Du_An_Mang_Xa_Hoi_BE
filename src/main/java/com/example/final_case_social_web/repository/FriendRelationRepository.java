@@ -15,6 +15,7 @@ public interface FriendRelationRepository extends JpaRepository<FriendRelation, 
     @Query(value = "select id_friend from friend_relation where id_user = :id1 and status = '3'", nativeQuery = true)
     Iterable<BigInteger> findRequest(@Param("id1") Long id2);
 
+
     @Modifying
     @Query(value = "select id_friend from friend_relation where id_user = :id1 and status = '3' order by id desc limit 5 ", nativeQuery = true)
     Iterable<BigInteger> findTop5Request(@Param("id1") Long id2);
